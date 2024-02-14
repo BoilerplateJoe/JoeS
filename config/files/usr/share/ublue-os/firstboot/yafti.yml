@@ -99,6 +99,9 @@ screens:
           default: false
           packages:
             - OBS: com.obsproject.Studio
+            - VkCapture for OBS: com.obsproject.Studio.OBSVkCapture
+            - Gstreamer for OBS: com.obsproject.Studio.Plugin.Gstreamer
+            - Gstreamer VAAPI for OBS: com.obsproject.Studio.Plugin.GStreamerVaapi
             - Kdenlive: org.kde.kdenlive
         Development:
           description: Developers, developers, developers!
@@ -119,3 +122,13 @@ screens:
           default: false
           packages:
             - KTailctl: org.fkoehler.KTailctl
+  final-screen:
+    source: yafti.screen.title
+    values:
+      title: "All done!"
+      icon: "/path/to/icon"
+      links:
+        - "Where did this come from?":
+            run: /usr/bin/xdg-open "https://github.com/BoilerplateJoe/JoeS"
+      description: |
+        You can now attempt to use your computer.
