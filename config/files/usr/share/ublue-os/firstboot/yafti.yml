@@ -1,0 +1,121 @@
+title: Welcome to Zombo.com
+properties:
+  mode: "run-on-change"
+screens:
+  first-screen:
+    source: yafti.screen.title
+    values:
+      title: "Welcome To JoeS (Joe's OS)"
+      icon: "/path/to/icon"
+      description: |
+        Lamp oil, rope, bombs you want it? It's yours, my friend, as long as you have enough GBs.
+  can-we-modify-your-flatpaks:
+    source: yafti.screen.consent
+    values:
+      title: Welcome, Traveler!
+      condition:
+        run: flatpak remotes --columns=name | grep fedora
+      description: |
+        We have detected the limited, Fedora-provided Flatpak remote on your system, whose applications are usually missing important codecs and other features. This step will therefore remove all basic Fedora Flatpaks from your system! We will instead switch all core Flatpak applications over to the vastly superior, unfiltered Flathub. If you don't want to do this, simply exit this installer.
+      actions:
+        - run: flatpak remote-delete --system --force fedora
+        - run: flatpak remote-delete --user --force fedora
+        - run: flatpak remove --system --noninteractive --all
+        - run: flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo
+        - run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
+  check-system-flathub:
+    source: yafti.screen.consent
+    values:
+      title: Missing Flathub Repository (System)
+      condition:
+        run: flatpak remotes --system --columns=name | grep flathub | wc -l | grep '^0$'
+      description: |
+        We have detected that you don't have Flathub's repository on your system. We will now add that repository to your system-wide list.
+      actions:
+        - run: flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo
+  check-user-flathub:
+    source: yafti.screen.consent
+    values:
+      title: Missing Flathub Repository (User)
+      condition:
+        run: flatpak remotes --user --columns=name | grep flathub | wc -l | grep '^0$'
+      description: |
+        We have detected that you don't have Flathub's repository on your current user account. We will now add that repository to your account.
+      actions:
+        - run: flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
+  applications:
+    source: yafti.screen.package
+    values:
+      title: Application Installer
+      show_terminal: true
+      package_manager: yafti.plugin.flatpak
+      package_manager_defaults:
+        user: false
+        system: true
+      groups:
+        The Internet:
+          description: For surfin' the web.
+          default: false
+          packages:
+            - Brave: com.brave.Browser
+            - LibreWolf: io.gitlab.librewolf-community
+            - Ungoogled Chromium: com.github.Eloston.UngoogledChromium
+            - Thunderbird: org.mozilla.Thunderbird
+        Gaming:
+          description: All your gaming needs.
+          default: false
+          packages:
+            - Steam: com.valvesoftware.Steam # It's Steam
+            - ProtonUp: net.davidotek.pupgui2 # Allows custom Wine/Proton installs into Steam
+            - Protontricks: com.github.Matoking.protontricks # Makes doing fixes for specific Proton-enabled Steam games easier
+            - Heroic Games Launcher: com.heroicgameslauncher.hgl # Epic Games installer and launcher (not requiring the Epic Games launcher to be installed)
+            - Bottles: com.usebottles.bottles # Decent Wine environment creator 
+            - Prism Launcher: org.prismlauncher.PrismLauncher # Minecraft launchers that manages multiple versions and mods
+            - Vinegar: org.vinegarhq.Vinegar # The only good Roblox on Linux manager
+            - GZDoom: org.zdoom.GZDoom # The top modern Doom source port
+            - DDNet: tw.ddnet.ddnet # I dunno
+            - RetroArch: org.libretro.RetroArch # Frontend for using multiple emulators
+            - Vesktop: dev.vencord.Vesktop # Discord with desktop audio support and mods to make Discord a little less painful
+        Music:
+          description: Play some tunez.
+          default: false
+          packages:
+            - VLC: org.videolan.VLC
+            - Cider: sh.cider.Cider
+            - Milky Tracker: org.milkytracker.MilkyTracker
+            - Chibi Tracker: com.github.reduz.ChibiTracker
+            - Pure Data: info.puredata.Pd
+            - Soma Radio: com.github.alexkdeveloper.somafm
+            - Audio Sharing: de.haeckerfelix.AudioSharing
+        Graphics:
+          description: Woah.
+          default: false
+          packages:
+            - GIMP: org.gimp.GIMP
+            - Krita: org.kde.krita
+            - LibreSprite: com.github.libresprite.LibreSprite
+        Multimedia:
+          description: Video-audio media.
+          default: false
+          packages:
+            - OBS: com.obsproject.Studio
+            - Kdenlive: org.kde.kdenlive
+        Development:
+          description: Developers, developers, developers!
+          default: false
+          packages:
+            - Pods: com.github.marhkb.Pods
+            - Ghidra: org.ghidra_sre.Ghidra
+            - ImHex: net.werwolv.ImHex
+            - D-Spy: org.gnome.dspy
+            - Waycheck: dev.serebit.Waycheck
+            - LibrePCB: org.librepcb.LibrePCB
+            - Godot: org.godotengine.GodotSharp
+            - SLADE: net.mancubus.SLADE
+            - LÖVE: org.love2d.love2d
+            - Wildcard: com.felipekinoshita.Wildcard
+        Other:
+          description: These are pretty specific applications.
+          default: false
+          packages:
+            - KTailctl: org.fkoehler.KTailctl
